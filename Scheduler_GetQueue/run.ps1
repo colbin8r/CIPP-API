@@ -21,10 +21,14 @@ $Tasks = foreach ($Tenant in $Tenants) {
                 Tag      = 'AllTenants'
                 TenantID = $t.customerId
                 Type     = $Tenant.type
-                RowKey   = $t.RowKey
+                RowKey   = $Tenant.RowKey
             }
         }
     }
+}
+
+if (($Tasks | Measure-Object).Count -eq 0) {
+    return
 }
 
 $Queue = New-CippQueueEntry -Name 'Scheduler' -TotalTasks ($Tasks | Measure-Object).Count
